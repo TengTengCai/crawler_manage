@@ -1,0 +1,7 @@
+flask
+flask-login
+flask-script
+flask-sqlalchemy
+redis
+pymysql
+pymongo
