@@ -1,5 +1,5 @@
-from flask import Blueprint
-from config import STATICFILES_DIR,TEMPLATES_DIR
+from flask import Blueprint, render_template
+from config import STATICFILES_DIR, TEMPLATES_DIR
 
 
 views = Blueprint('views', __name__,
@@ -10,3 +10,9 @@ views = Blueprint('views', __name__,
 @views.route('/')
 def index():
     return 'Hello, World'
+
+
+@views.route('/login/')
+def login():
+    print(STATICFILES_DIR)
+    return render_template('login.html')

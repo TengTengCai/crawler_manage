@@ -1,7 +1,7 @@
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
-STATICFILES_DIR = os.path.join(basedir, '/app/static')
-TEMPLATES_DIR = os.path.join(basedir, '/app/templates')
+STATICFILES_DIR = os.path.join(basedir, 'app/static')
+TEMPLATES_DIR = os.path.join(basedir, 'app/templates')
 
 
 class Config:
