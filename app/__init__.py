@@ -1,10 +1,12 @@
 from flask import Flask
-from flask_login import LoginManager
+# from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
+from flask_session import Session
 from config import config
 
 db = SQLAlchemy()
-login_manager = LoginManager()
+session = Session()
+# login_manager = LoginManager()
 
 
 def create_app(config_name):
@@ -20,6 +22,7 @@ def create_app(config_name):
     app.register_blueprint(api, url_prefix='/api')
 
     db.init_app(app)
-    login_manager.init_app(app)
+    session.init_app(app)
+    # login_manager.init_app(app)
 
     return app

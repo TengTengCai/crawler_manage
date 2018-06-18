@@ -12,6 +12,8 @@ class User(TimestampMixin, db.Model):
     username = db.Column(db.String(20), unique=True)  # 用户名
     password = db.Column(db.String(225), nullable=False)  # 密码
     nike_name = db.Column(db.String(20), unique=True)  # 昵称
+    invitation_code = db.Column(db.String(20), nullable=False)  # 邀请码
+    app_key = db.Column(db.String(225), unique=True, nullable=False)  # 用户访问接口钥匙
 
     __tablename__ = 'cm_users'
 

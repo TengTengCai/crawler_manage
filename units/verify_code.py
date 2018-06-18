@@ -36,7 +36,7 @@ class VerifyCode(object):
         """
         随机生成验证码的方法
         将生成的验证码赋值给self._random_code属性
-        
+
         :return: None
         """
         lib = '1234567890qwertyuiopasdfghjklzxcvbnm'  # 验证码字符库
@@ -68,7 +68,7 @@ class VerifyCode(object):
         # 创建一个Image对象, 全白的画布
         image = Image.new('RGB', (self._width, self._height), (255, 255, 255))
         # 创建一个字体对象
-        font = ImageFont.truetype('Arial.ttf', self._font_size)
+        font = ImageFont.truetype('arial.ttf', self._font_size)
         # 创建一个画图对象
         draw = ImageDraw.Draw(image)
         # for循环随机生成噪点
@@ -115,15 +115,3 @@ class VerifyCode(object):
         :return: 验证码字符,PIL image对象图片
         """
         return self._random_code, self._verify_code_image
-
-
-def main():
-    vcode = VerifyCode()
-    print(vcode.verify_code)
-    image = vcode.verify_image
-    with open('test.jpg', 'wb') as fp:
-        image.save(fp)
-
-
-if __name__ == '__main__':
-    main()
