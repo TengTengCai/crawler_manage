@@ -1,0 +1,26 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body{
+	background-color: #E6E6E6;
+}
+.info {
+	margin: 10px;
+	padding: 15px;
+	background-color: #FFFFFF;
+	border-radius: 5px;
+}
+.info_item{
+	padding-left: 20px;
+}
+#nickname_box span{
+	display: block;
+}
+#show_nickname{
+	display: inline;
+}
+#app_key_box {
+	clear: left;
+}

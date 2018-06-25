@@ -1,4 +1,6 @@
 $(function () {
+    // $('body').height($(document).contents().find('body').height());
+    // console.log($(document).contents().find('body').height());
     $('.login-form').submit(function (e) {
         e.preventDefault();
 
@@ -10,7 +12,7 @@ $(function () {
             if (data.code === 200) {
                 alert(data.msg);
                 setTimeout(function (e) {
-                    window.location.href = '/console/'
+                    window.location.href = '/myConsole/'
                 }, 1000);
             } else {
                 error_info.html(data.msg)

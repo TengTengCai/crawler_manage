@@ -3,7 +3,8 @@ from io import BytesIO
 from random import choice
 from datetime import datetime
 from hashlib import md5
-from flask import Blueprint, render_template, request, session, Response, jsonify
+from functools import wraps
+from flask import Blueprint, render_template, request, session, Response, jsonify, redirect
 
 # from app import login_manager
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -130,6 +131,12 @@ def login():
         return jsonify(data)
 
 
+@views.route('/logout/', methods=['GET'])
+def logout():
+    session.pop('user_id')
+    return '退出成功'
+
+
 @views.route('/VerifyCode/<float:random_num>/')
 def get_verify_code(random_num):
     print(random_num)
@@ -140,3 +147,76 @@ def get_verify_code(random_num):
     image.save(f, 'jpeg')
     resp = Response(f.getvalue(), mimetype="image/jpeg")
     return resp
+
+
+def is_login(fn):
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        data = {}
+        try:
+            user_id = session['user_id']
+
+        except KeyError as e:
+            data['code'] = 1000
+            data['msg'] = '未登录' + str(e)
+            return jsonify(data)
+        else:
+            return fn(user_id, *args, **kwargs)
+
+    return wrapper
+
+
+@views.route('/myConsole/', methods=['GET'])
+def my_console():
+    try:
+        session['user_id']
+    except KeyError:
+        return redirect('/login/')
+    return render_template('console.html')
+
+
+@views.route('/personal/', methods=['GET'])
+def personal():
+    try:
+        session['user_id']
+    except KeyError:
+        return redirect('/login/')
+    return render_template('personal.html')
+
+
+@views.route('/getUserInfo/', methods=['GET'])
+@is_login
+def get_user_info(user_id):
+    data = {}
+    try:
+        user = User.query.get(user_id)
+    except Exception as e:
+        data['code'] = 501
+        data['msg'] = '用户不存在！' + str(e)
+        return jsonify(data)
+    else:
+        data['code'] = 200
+        data['msg'] = '请求成功！'
+        data['username'] = user.username
+        data['nickname'] = user.nike_name
+        data['app_key'] = user.app_key
+        data['invitation_code'] = user.invitation_code
+        return jsonify(data)
+
+
+@views.route('/setNickName/', methods=['POST'])
+@is_login
+def chang_nick_name(user_id):
+    data = {}
+    form = request.form
+    new_nicke_name = form['new_name']
+    user = User.query.get(user_id)
+    if not user:
+        data['code'] = 601
+        data['msg'] = '用户不存在！'
+    else:
+        user.nike_name = new_nicke_name
+        db.session.commit()
+        data['code'] = 200
+        data['msg'] = '请求成功！'
+    return jsonify(data)
