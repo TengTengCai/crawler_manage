@@ -13,7 +13,7 @@ $(function () {
             error_info.html();
             $('.registration-form').ajaxSubmit(function (data) {
                 if (data.code === 200){
-                    alert('注册成功,1秒后跳转到登录界面');
+                    $('#success_info').html('注册成功,1秒后跳转到登录界面');
                     setTimeout(function (e) {
                        window.location.href = '/login/';
                     },1000);

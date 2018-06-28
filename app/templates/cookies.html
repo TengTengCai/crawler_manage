@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Cookies</title>
+    <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="/static/bootstrap/css/bootstrap-table.css" rel="stylesheet" />
+    <link href="/static/bootstrap/css/bootstrap-theme.css" rel="stylesheet" />
+    <link href="/static/css/cookies_style.css" rel="stylesheet" />
+    <script src="/static/js/jquery_3.3.1_jquery.min.js"></script>
+    <script src="/static/js/jquery.form.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.js"></script>
+    <script src="/static/bootstrap/js/bootstrap-table.js"></script>
+    <script src="/static/bootstrap/js/bootstrap-table-zh-CN.js"></script>
+</head>
+<body>
+    <div>
+        <div class="row">
+            <form id="add_cookie_form" action="/addCookies/" method="post">
+                <div class="form-group col-xs-3">
+                    <label class="sr-only" for="website">站点地址:</label>
+                    <input id="input_website" placeholder="站点地址" name="website" type="text" class="form-control input-sm"/>
+                </div>
+                <div class="form-group col-xs-8">
+                    <label class="sr-only" for="cookies">Cookies字符串:</label>
+                    <input id="input_cookies" placeholder="Cookies字符串" name="cookies" type="text" class="form-control input-sm" />
+                </div>
+                <div class="form-group col-xs-1">
+                    <button type="submit" class="btn btn-primary btn-sm center-block">添加</button>
+                </div>
+            </form>
+        </div>
+        <div class="row">
+            <form id="select_cookie_form" action="/selectCookies/" method="get">
+                    <div class="form-group col-xs-4">
+                        <select id="website_input" class="form-control input-sm">
+                            <option></option>
+                        </select>
+                    </div>
+                    <div class="form-group col-xs-1">
+                         <button type="submit" class="btn btn-primary btn-sm center-block">查询</button>
+                    </div>
+            </form>
+        </div>
+        <table id="cookies_table" class="bootstrap-table"></table>
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                <form id="modal_form" action="/changeCookies/" method="post">
+                    <input id="c_id_input" type="hidden" name="c_id" value=""/>
+                    <div class="form-group">
+                        <label for="">站点地址</label>
+                        <p id="website_p"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="cookies">Cookies字符串</label>
+                        <input name="cookies" type="text" class="form-control" id="cookies_input" placeholder="Cookies">
+                    </div>
+                    <p id="form_info_p"></p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id="change_save_btn" type="button" class="btn btn-primary">保存</button>
+            </div>
+        </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div id="add_cookie_info" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <p id="modal_info_p" style="margin: 20px;"></p>
+            </div>
+        </div>
+    </div>
+<script src="/static/js/page_js/cookies_page.js"></script>
+</body>
+</html>

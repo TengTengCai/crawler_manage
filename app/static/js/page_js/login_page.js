@@ -10,7 +10,7 @@ $(function () {
         let error_info = $('#error_info');
         $('form').ajaxSubmit(function (data) {
             if (data.code === 200) {
-                alert(data.msg);
+                $('#success_info').html(data.msg);
                 setTimeout(function (e) {
                     window.location.href = '/myConsole/'
                 }, 1000);

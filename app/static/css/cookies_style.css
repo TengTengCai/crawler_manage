@@ -1,0 +1,35 @@
+#add_cookie_form {
+    margin: 10px;
+}
+#select_cookie_form {
+    margin-left: 10px;
+}
+.W100 .th-inner {
+    width:100px !important;
+}
+.W80 .th-inner {
+    width:80px !important;
+}
+.W60 .th-inner {
+    width:60px !important;
+}
+.W50 .th-inner {
+    width:50px !important;
+}
+
+.W500 .th-inner {
+    width:500px !important;
+}
+.table{
+    table-layout: fixed;
+}
+.table td:hover{
+    overflow: visible;
+    white-space: normal;
+}
+.table td {
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

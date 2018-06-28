@@ -23,7 +23,7 @@ body {
     margin:10px 20px 10px 0px;
     background-color:transparent;
     padding:10px;
-    min-height:1000px;
+    min-height:800px;
 }
 
 .text-center {
@@ -588,7 +588,7 @@ line-height: 1.428571429;
                margin: 0 0 0 260px;
         padding: 15px 30px;
         
-               min-height: 1000px;
+               min-height: 800px;
 		
     }
 	
@@ -617,6 +617,6 @@ font-size: 19px;
   margin: 14px;
 }
 }
-iframe{
-	width: 100%;
+iframe {
+    height: 800px;
 }

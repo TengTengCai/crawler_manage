@@ -12,7 +12,7 @@
             /*MENU 
             ------------------------------------*/
             $('#main-menu').metisMenu();
-			
+
             $(window).bind("load resize", function () {
                 if ($(this).width() < 768) {
                     $('div.sidebar-collapse').addClass('collapse')
@@ -20,31 +20,37 @@
                     $('div.sidebar-collapse').removeClass('collapse')
                 }
             });
-		}
+        }
     };
     // Initializing ///
     $(document).ready(function () {
-        mainApp.initFunction(); 
-		$("#sideNav").click(function(){
-			if($(this).hasClass('closed')){
-				$('.navbar-side').animate({left: '0px'});
-				$(this).removeClass('closed');
-				$('#page-wrapper').animate({'margin-left' : '260px'});
-				
-			}
-			else{
-			    $(this).addClass('closed');
-				$('.navbar-side').animate({left: '-260px'});
-				$('#page-wrapper').animate({'margin-left' : '0px'}); 
-			}
-		});
+        mainApp.initFunction();
+        $("#sideNav").click(function () {
+            if ($(this).hasClass('closed')) {
+                $('.navbar-side').animate({left: '0px'});
+                $(this).removeClass('closed');
+                $('#page-wrapper').animate({'margin-left': '260px'});
+            }
+            else {
+                $(this).addClass('closed');
+                $('.navbar-side').animate({left: '-260px'});
+                $('#page-wrapper').animate({'margin-left': '0px'});
+            }
+        });
     });
-	$('.menu').on('click', function(e){
-		e.preventDefault();
-		var url = $(this).attr('href');
-		// console.log(url);
-		$('#iframe_row').attr('src', url);
-		$('.active-menu').attr('class', 'menu');
-		$(this).attr('class', 'menu active-menu');
-	});
+    $('.menu').on('click', function (e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        // console.log(url);
+        $('#iframe_row').attr('src', url);
+        $('.active-menu').attr('class', 'menu');
+        $(this).attr('class', 'menu active-menu');
+        let my_hash = $(this).attr('tag');
+        // console.log(my_hash);
+        window.location.hash = my_hash;
+    });
+
+    $("#iframe_row").on('load', function () {
+
+    })
 }(jQuery));

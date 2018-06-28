@@ -11,7 +11,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from config import STATICFILES_DIR, TEMPLATES_DIR
 from units import verify_code
-from app.models import User, db
+from app.models import User, db, RedisConnection, WebSite, Cookies
 
 views = Blueprint('views', __name__,
                   static_folder=STATICFILES_DIR,
@@ -134,7 +134,7 @@ def login():
 @views.route('/logout/', methods=['GET'])
 def logout():
     session.pop('user_id')
-    return '退出成功'
+    return redirect('/login/')
 
 
 @views.route('/VerifyCode/<float:random_num>/')
@@ -155,13 +155,17 @@ def is_login(fn):
         data = {}
         try:
             user_id = session['user_id']
-
         except KeyError as e:
             data['code'] = 1000
             data['msg'] = '未登录' + str(e)
             return jsonify(data)
         else:
-            return fn(user_id, *args, **kwargs)
+            if user_id is '':
+                data['code'] = 1000
+                data['msg'] = '未登录'
+                return jsonify(data)
+            else:
+                return fn(*args, **kwargs)
 
     return wrapper
 
@@ -186,7 +190,8 @@ def personal():
 
 @views.route('/getUserInfo/', methods=['GET'])
 @is_login
-def get_user_info(user_id):
+def get_user_info():
+    user_id = session['user_id']
     data = {}
     try:
         user = User.query.get(user_id)
@@ -206,7 +211,8 @@ def get_user_info(user_id):
 
 @views.route('/setNickName/', methods=['POST'])
 @is_login
-def chang_nick_name(user_id):
+def change_nick_name():
+    user_id = session['user_id']
     data = {}
     form = request.form
     new_nicke_name = form['new_name']
@@ -220,3 +226,176 @@ def chang_nick_name(user_id):
         data['code'] = 200
         data['msg'] = '请求成功！'
     return jsonify(data)
+
+
+@views.route('/IPProxy/', methods=['GET'])
+def get_ip_proxy():
+    return render_template('proxy_manage.html')
+
+
+@views.route('/getIPProxy/', methods=['GET'])
+@is_login
+def query_ip_proxy():
+    params = request.args
+    rows = int(params['rows'])
+    page = int(params['page'])
+    rconn = RedisConnection()
+    proxy_list = rconn.get_ip_proxy((page - 1) * rows, page * rows)
+    data = {'total': rconn.get_ip_proxy_total(),
+            'rows': proxy_list}
+    return jsonify(data)
+
+
+@views.route('/Cookies/', methods=['GET'])
+def get_cookies():
+    return render_template('cookies.html')
+
+
+@views.route('/getWebSite/', methods=['GET'])
+def get_website():
+    website_list = WebSite.query.all()
+    data = {}
+    temp = []
+    for website in website_list:
+        w_id = website.w_id
+        web_host = website.web_site_host
+        item = {'id': w_id, 'webSite': web_host}
+        temp.append(item)
+    data['code'] = 200
+    data['msg'] = '请求成功!'
+    data['webs'] = temp
+    return jsonify(data)
+
+
+@views.route('/selectCookies/', methods=['GET'])
+@is_login
+def select_cookies():
+    user_id = session['user_id']
+    data = {}
+    my_args = request.args
+    try:
+        rows = int(my_args['rows'])
+        page = int(my_args['page'])
+        website_host = my_args['website']
+    except KeyError as e:
+        print(e)
+        data['code'] = 200
+        data['msg'] = '参数错误!'
+        return jsonify(data)
+    else:
+        # print(my_args)
+        if website_host == 'null':
+            all_cookies = Cookies.query.filter_by(u_id=user_id).offset(rows * (page - 1)).limit(rows)
+            count = Cookies.query.count()
+        else:
+            website = WebSite.query.filter_by(web_site_host=website_host).first()
+            all_cookies = Cookies.query.filter_by(w_id=website.w_id, u_id=user_id).offset(rows * (page - 1)).limit(rows)
+            count = len(website.cookies)
+        temp = []
+        for cookie_obj in all_cookies:
+            item = {'id': cookie_obj.c_id,
+                    'website': cookie_obj.website.web_site_host,
+                    'cookies_string': cookie_obj.cookies_String,
+                    'operation': ''}
+            temp.append(item)
+        data['total'] = count
+        data['rows'] = temp
+        return jsonify(data)
+
+
+@views.route('/addCookies/', methods=['POST'])
+@is_login
+def add_cookies():
+    user_id = session['user_id']
+    data = {}
+    my_form = request.form
+    try:
+        website_host = my_form['website']
+        cookies_string = my_form['cookies']
+    except KeyError as e:
+        print(str(e))
+        data['code'] = 701
+        data['msg'] = '参数不正确'
+        return jsonify(data)
+    website = WebSite.query.filter_by(web_site_host=website_host).first()
+    if not website:
+        website = WebSite(web_site_host=website_host)
+        try:
+            db.session.add(website)
+            db.session.commit()
+        except Exception as e:
+            print(str(e))
+            data['code'] = 702
+            data['msg'] = '添加站点数据失败'
+            db.session.rollback()
+            return jsonify(data)
+    cookies = Cookies(cookies_String=cookies_string, w_id=website.w_id, u_id=user_id)
+    try:
+        db.session.add(cookies)
+        db.session.commit()
+    except Exception as e:
+        print(str(e))
+        data['code'] = 703
+        data['msg'] = '添加Cookies数据失败,数据库未响应!'
+        db.session.rollback()
+        return jsonify(data)
+    else:
+        data['code'] = 200
+        data['msg'] = '请求成功!'
+        return jsonify(data)
+
+
+@views.route('/deleteCookies/<int:c_id>/', methods=['DElETE'])
+@is_login
+def delete_cookies(c_id):
+    data = {}
+    cookies = Cookies.query.get(c_id)
+    w_id = cookies.w_id
+    count = Cookies.query.filter_by(w_id=w_id).count()
+    if count == 1:
+        website = WebSite.query.get(w_id)
+        db.session.delete(website)
+    try:
+        db.session.delete(cookies)
+        db.session.commit()
+    except Exception as e:
+        print('删除数据出错' + str(e))
+        data['code'] = 801
+        data['msg'] = '删除数据出错'
+        db.session.rollback()
+        return jsonify(data)
+    else:
+        data['code'] = 200
+        data['msg'] = '数据删除请求成功!'
+        return jsonify(data)
+
+
+@views.route('/changeCookies/', methods=['POST'])
+@is_login
+def change_cookies():
+    data = {}
+    my_form = request.form
+    try:
+        c_id = my_form['c_id']
+        cookies_str = my_form['cookies']
+    except KeyError as e:
+        print('参数错误!' + str(e))
+        data['code'] = 901
+        data['msg'] = '参数错误'
+        return jsonify(data)
+    else:
+        cookies = Cookies.query.get(c_id)
+        cookies.cookies_String = cookies_str
+        try:
+            db.session.add(cookies)
+            db.session.commit()
+        except Exception as e:
+            print('修改数据发生错误!' + str(e))
+            db.session.rollback()
+            data['code'] = 902
+            data['msg'] = '修改数据发生错误!'
+            return jsonify(data)
+        else:
+            data['code'] = 200
+            data['msg'] = '请求成功,成功修改!'
+            return jsonify(data)
