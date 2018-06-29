@@ -21,6 +21,8 @@ class User(TimestampMixin, db.Model):
     nike_name = db.Column(db.String(20), unique=True)  # 昵称
     invitation_code = db.Column(db.String(20), nullable=False)  # 邀请码
     app_key = db.Column(db.String(225), unique=True, nullable=False)  # 用户访问接口钥匙
+    ip_proxy_vt = db.Column(db.Integer, default=0, unique=False, nullable=False)  # ip接口访问次数
+    cookies_vt = db.Column(db.Integer, default=0, unique=False, nullable=False)  # cookies接口访问次数
 
     __tablename__ = 'cm_user'
 
@@ -84,3 +86,9 @@ class RedisConnection(object):
     @deal_redis_error
     def get_ip_proxy_total(self):
         return self._conn.llen(IP_PROXY_LIST_NAME)
+
+    @deal_redis_error
+    def get_one_ip_proxy(self):
+        proxy_bytes = self._conn.rpoplpush(IP_PROXY_LIST_NAME, IP_PROXY_LIST_NAME)
+        proxy = proxy_bytes.decode('utf-8')
+        return proxy

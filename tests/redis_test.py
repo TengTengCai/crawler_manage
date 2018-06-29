@@ -44,12 +44,19 @@ class RedisConnection(object):
     def get_ip_proxy_total(self):
         return self._conn.llen(IP_PROXY_LIST_NAME)
 
+    @deal_redis_error
+    def get_one_ip_proxy(self):
+        proxy_bytes = self._conn.rpoplpush(IP_PROXY_LIST_NAME, IP_PROXY_LIST_NAME)
+        proxy = proxy_bytes.decode('utf-8')
+        return proxy
+
 
 def main():
     rconn = RedisConnection()
     proxy_list = rconn.get_ip_proxy(0, 9)
-    print(proxy_list)
-    print(rconn.get_ip_proxy_total())
+    # print(proxy_list)
+    # print(rconn.get_ip_proxy_total())
+    print(rconn.get_one_ip_proxy())
     # print(len(proxy_list))
     # print(type(proxy_list))
 
