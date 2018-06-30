@@ -21,6 +21,9 @@ body{
 #show_nickname{
 	display: inline;
 }
-#app_key_box {
-	clear: left;
+#app_key_box span{
+	display: block;
+}
+#show_app_key {
+	display: inline;
 }

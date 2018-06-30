@@ -6,7 +6,7 @@ import redis
 basedir = os.path.abspath(os.path.dirname(__file__))
 STATICFILES_DIR = os.path.join(basedir, 'app/static')
 TEMPLATES_DIR = os.path.join(basedir, 'app/templates')
-REDIS_HOST = '118.24.88.26'
+REDIS_HOST = '120.79.52.3'
 REDIS_PORT = 8464
 REDIS_PASSWORD = 'yxgw'
 IP_PROXY_LIST_NAME = 'proxy_info_pool'

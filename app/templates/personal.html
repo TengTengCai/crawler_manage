@@ -21,14 +21,24 @@
 			<div id="app_key_box">
 				<span>app_key:</span>
 				<p class="info_item" id="show_app_key"></p>
+                <button id="app_key_copy" data-clipboard-target="#show_app_key">复制</button>
 			</div>
-			<div>
+			<div id="icode_box">
 				<span>邀请码：</span>
 				<p class="info_item" id="show_icode"></p>
+			</div>
+            <div>
+				<span>IP代理API访问次数：</span>
+				<p class="info_item" id="show_ip_vt"></p>
+			</div>
+            <div>
+				<span>Cookie池API访问次数：</span>
+				<p class="info_item" id="show_cookie_vt"></p>
 			</div>
 		</div>
 	</body>
 	<script type="text/javascript" src="/static/js/jquery_3.3.1_jquery.min.js" ></script>
+    <script type="text/javascript" src="/static/js/clipboard.js_2.0.1_clipboard.min.js"></script>
 	<script type="text/javascript" src="/static/js/bootstrap.min.js" ></script>
 	<script type="text/javascript" src="/static/js/page_js/personal_page.js" ></script>
 </html>

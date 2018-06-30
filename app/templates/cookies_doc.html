@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cookie池接口文档</title>
+    <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="/static/bootstrap/css/bootstrap-table.css" rel="stylesheet" />
+    <link href="/static/bootstrap/css/bootstrap-theme.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <h1>Cookie池接口文档</h1>
+
+        <h2>获取一条Cookie数据</h2>
+
+        <h3>方法</h3>
+
+        <p><em>GET</em></p>
+
+        <h4>URL地址</h4>
+
+        <p><code>http://127.0.0.1:5000/api/getCookies/&lt;string:host&gt;/?app_key=</code></p>
+
+        <p><code>&lt;string:host&gt;</code>为需要获取哪个站点的Cookie值</p>
+
+        <p><code>app_key</code>为用户的钥匙,在控制台中可查看其值为多少.</p>
+
+        <h3>响应</h3>
+
+        <p>会随机返回一个符合要求的Cookie(前提是需要在后台添加你要获取的Cookie)</p>
+
+        <h4>请求成功</h4>
+
+        <p><code>
+        {
+          &quot;code&quot;: 200,
+          &quot;data&quot;: &quot;SUV=1802141907505183; debug_test=sohu_third_cookie; t=1530172506629; gidinf=x099980109ee0dbed7ba5a8580009075217e9c2185d3; sohutag=8HsmeSc5NCwmcyc5NSwmYjc5NCwmYSc5NCwmZjc5NCwmZyc5NCwmbjc5NTIsJ2kmOiAsJ3cmOiAsJ2gmOiAsJ2NmOiAsJ2UmOiAsJ20mOiAsJ3QmOiB9; gn12=w:1; _muid_=1527731489680410; IPLOC=CN5100; reqtype=pc&quot;,
+          &quot;msg&quot;: &quot;请求成功&quot;
+        }
+        </code></p>
+
+        <h4>输入的站点不存在</h4>
+
+        <p><code>
+        {
+          &quot;code&quot;: 1301,
+          &quot;msg&quot;: &quot;当前host=www.baidu.com在数据库中并不存在,请确认是否输入正确,或在后台中添加相应站点的Cookies的数值&quot;
+        }
+        </code></p>
+
+        <h4>缺少app_key参数</h4>
+
+        <p><code>json
+        {
+          &quot;code&quot;: 1101,
+          &quot;msg&quot;: &quot;缺少app_key参数!&quot;
+        }
+        </code></p>
+
+        <h4>app_key不存在</h4>
+
+        <p><code>json
+        {
+          &quot;code&quot;: 1102,
+          &quot;msg&quot;: &quot;app_key的值不存在!&quot;
+        }
+        </code></p>
+
+        <h4>数据库错误</h4>
+
+        <p><code>json
+        {
+          &quot;code&quot;: 1102,
+          &quot;msg&quot;: &quot;服务器忙,请稍后再试! &lt;string: 错误原因&gt;&quot;
+        }
+        </code></p>
+    </div>
+</body>
+</html>

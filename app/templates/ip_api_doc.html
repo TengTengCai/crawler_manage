@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>IP代理池接口文档</title>
+    <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="/static/bootstrap/css/bootstrap-table.css" rel="stylesheet" />
+    <link href="/static/bootstrap/css/bootstrap-theme.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <h1>IP代理池接口文档</h1>
+
+        <p>该接口能从Redis高速缓存服务器中获取一条代理信息或多条IP代理信息.</p>
+
+        <h2>获取一条代理信息</h2>
+
+        <h3>请求</h3>
+
+        <h4>方法</h4>
+
+        <p><em>GET</em></p>
+
+        <h4>URL地址</h4>
+
+        <p> <code>http://120.79.52.3/api/getOneIPProxy/?app_key=</code></p>
+
+        <p>在这里需要传递<code>app_key</code>用户的钥匙,在控制台中可查看其值为多少.</p>
+
+        <h3>响应</h3>
+
+        <h4>请求成功</h4>
+
+        <p><code>
+        {<br/>
+          &quot;code&quot;: 200,<br/>
+          &quot;data&quot;: [<br/>
+            &quot;{\&quot;ip\&quot;: \&quot;119.10.67.144\&quot;, \&quot;port\&quot;: \&quot;808\&quot;, \&quot;anonymity\&quot;: \&quot;\\u9ad8\\u533f\&quot;, \&quot;p_type\&quot;: \&quot;https\&quot;, \&quot;p_address\&quot;: \&quot;\\u5317\\u4eac\&quot;}&quot;<br/>
+          ],<br/>
+          &quot;msg&quot;: &quot;请求成功&quot;<br/>
+        }
+        </code></p>
+
+        <h4>缺少app_key参数</h4>
+
+        <p><code>
+        {<br/>
+          &quot;code&quot;: 1101,<br/>
+          &quot;msg&quot;: &quot;缺少app_key参数!&quot;<br/>
+        }
+        </code></p>
+
+        <h4>app_key不存在</h4>
+
+        <p><code>
+        {<br/>
+          &quot;code&quot;: 1102,<br/>
+          &quot;msg&quot;: &quot;app_key的值不存在!&quot;<br/>
+        }
+        </code></p>
+
+        <h4>数据库错误</h4>
+
+        <p><code>
+        {<br/>
+          &quot;code&quot;: 1102,<br/>
+          &quot;msg&quot;: &quot;服务器忙,请稍后再试! &lt;string: 错误原因&gt;&quot;<br/>
+        }
+        </code></p>
+
+        <h2>获取多条代理IP</h2>
+
+        <h3>方法</h3>
+
+        <p><em>GET</em></p>
+
+        <h4>URL地址</h4>
+
+        <p> <code>http://120.79.52.3/api/getMoreIPProxy/&lt;int:num&gt;/?app_key=</code></p>
+
+        <p><code>&lt;int:num&gt;</code>为需要获取的IP代理跳数(最多10条,超过10条则只会返回10条数据)</p>
+
+        <p><code>app_key</code>为用户的钥匙,在控制台中可查看其值为多少.</p>
+
+        <h3>响应</h3>
+
+        <h4>请求成功</h4>
+
+        <p><code>
+        {<br/>
+          &quot;code&quot;: 200,<br/>
+          &quot;data&quot;: [<br/>
+            &quot;{\&quot;ip\&quot;: \&quot;115.204.27.169\&quot;, \&quot;port\&quot;: \&quot;6666\&quot;, \&quot;anonymity\&quot;: \&quot;\\u9ad8\\u533f\&quot;, \&quot;p_type\&quot;: \&quot;https\&quot;, \&quot;p_address\&quot;: \&quot;\\u6d59\\u6c5f\\u676d\\u5dde\&quot;}&quot;,<br/>
+            &quot;{\&quot;ip\&quot;: \&quot;218.64.154.53\&quot;, \&quot;port\&quot;: \&quot;61234\&quot;, \&quot;anonymity\&quot;: \&quot;\\u9ad8\\u533f\&quot;, \&quot;p_type\&quot;: \&quot;http\&quot;, \&quot;p_address\&quot;: \&quot;\\u6c5f\\u897f\\u840d\\u4e61\\u5e02\\u4e0a\\u6817\\u53bf\&quot;}&quot;,<br/>
+            &quot;{\&quot;ip\&quot;: \&quot;61.135.217.7\&quot;, \&quot;port\&quot;: \&quot;80\&quot;, \&quot;anonymity\&quot;: \&quot;\\u9ad8\\u533f\&quot;, \&quot;p_type\&quot;: \&quot;http\&quot;, \&quot;p_address\&quot;: \&quot;\\u5317\\u4eac\&quot;}&quot;,<br/>
+            &quot;{\&quot;ip\&quot;: \&quot;182.113.172.33\&quot;, \&quot;port\&quot;: \&quot;36293\&quot;, \&quot;anonymity\&quot;: \&quot;\\u9ad8\\u533f\&quot;, \&quot;p_type\&quot;: \&quot;https\&quot;, \&quot;p_address\&quot;: \&quot;\\u6cb3\\u5357\\u6f2f\\u6cb3\&quot;}&quot;,<br/>
+            &quot;{\&quot;ip\&quot;: \&quot;113.240.226.164\&quot;, \&quot;port\&quot;: \&quot;8080\&quot;, \&quot;anonymity\&quot;: \&quot;\\u9ad8\\u533f\&quot;, \&quot;p_type\&quot;: \&quot;https\&quot;, \&quot;p_address\&quot;: \&quot;\\u6e56\\u5357\\u957f\\u6c99\&quot;}&quot;,<br/>
+            &quot;{\&quot;ip\&quot;: \&quot;115.221.121.103\&quot;, \&quot;port\&quot;: \&quot;27389\&quot;, \&quot;anonymity\&quot;: \&quot;\\u9ad8\\u533f\&quot;, \&quot;p_type\&quot;: \&quot;https\&quot;, \&quot;p_address\&quot;: \&quot;\\u6d59\\u6c5f\\u6e29\\u5dde\&quot;}&quot;,<br/>
+            &quot;{\&quot;ip\&quot;: \&quot;120.78.78.141\&quot;, \&quot;port\&quot;: \&quot;8888\&quot;, \&quot;anonymity\&quot;: \&quot;\\u900f\\u660e\&quot;, \&quot;p_type\&quot;: \&quot;https\&quot;, \&quot;p_address\&quot;: null}&quot;,<br/>
+            &quot;{\&quot;ip\&quot;: \&quot;222.185.22.45\&quot;, \&quot;port\&quot;: \&quot;6666\&quot;, \&quot;anonymity\&quot;: \&quot;\\u900f\\u660e\&quot;, \&quot;p_type\&quot;: \&quot;https\&quot;, \&quot;p_address\&quot;: \&quot;\\u6c5f\\u82cf\\u5e38\\u5dde\&quot;}&quot;,<br/>
+            &quot;{\&quot;ip\&quot;: \&quot;120.26.110.59\&quot;, \&quot;port\&quot;: \&quot;8080\&quot;, \&quot;anonymity\&quot;: \&quot;\\u900f\\u660e\&quot;, \&quot;p_type\&quot;: \&quot;http\&quot;, \&quot;p_address\&quot;: \&quot;\\u5317\\u4eac\&quot;}&quot;,<br/>
+            &quot;{\&quot;ip\&quot;: \&quot;183.128.35.176\&quot;, \&quot;port\&quot;: \&quot;18118\&quot;, \&quot;anonymity\&quot;: \&quot;\\u900f\\u660e\&quot;, \&quot;p_type\&quot;: \&quot;https\&quot;, \&quot;p_address\&quot;: \&quot;\\u6d59\\u6c5f\\u676d\\u5dde\&quot;}&quot;<br/>
+          ],<br/>
+          &quot;msg&quot;: &quot;请求成功&quot;<br/>
+        }
+        </code></p>
+
+        <h4>其他响应</h4>
+
+        <p>其他的响应与获取一条代理信息的响应相同.</p>
+    </div>
+</body>
+</html>

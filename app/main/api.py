@@ -51,6 +51,7 @@ def get_one_ip_proxy(user):
 def get_more_ip_proxy(user, num):
     data = {}
     proxy_list = []
+    num = num if num < 10 else 10
     for i in range(num):
         proxy = redis_conn.get_one_ip_proxy()
         proxy_list.append(proxy)
@@ -83,7 +84,17 @@ def get_one_cookies(user, host):
     count = cookies_list.count()
     cookies = cookies_list.offset(randint(0, count)).limit(1).first()
     cookies_str = cookies.cookies_String if cookies else ''
-    data['code'] = 200
-    data['msg'] = '请求成功'
-    data['data'] = cookies_str
-    return jsonify(data)
+    if cookies_str != '':
+        user.cookies_vt += 1
+    try:
+        db.session.add(user)
+        db.session.commit()
+    except Exception as e:
+        data['code'] = 1201
+        data['msg'] = '服务器忙,请稍后再试!' + str(e)
+        return jsonify(data)
+    else:
+        data['code'] = 200
+        data['msg'] = '请求成功'
+        data['data'] = cookies_str
+        return jsonify(data)

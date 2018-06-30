@@ -206,6 +206,8 @@ def get_user_info():
         data['nickname'] = user.nike_name
         data['app_key'] = user.app_key
         data['invitation_code'] = user.invitation_code
+        data['ip_proxy_vt'] = user.ip_proxy_vt
+        data['cookies_vt'] = user.cookies_vt
         return jsonify(data)
 
 
@@ -399,3 +401,13 @@ def change_cookies():
             data['code'] = 200
             data['msg'] = '请求成功,成功修改!'
             return jsonify(data)
+
+
+@views.route('/IPProxyDoc/', methods=['GET'])
+def ip_proxy_doc():
+    return render_template('ip_api_doc.html')
+
+
+@views.route('/CookieDoc/', methods=['GET'])
+def cookies_doc():
+    return render_template('cookies_doc.html')
