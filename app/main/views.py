@@ -22,7 +22,14 @@ hash_md5 = md5()
 
 @views.route('/')
 def index():
-    return 'Hello, World'
+    try:
+        user_id = session['user_id']
+    except KeyError as e:
+        return redirect('/login/')
+    if user_id != '':
+        return redirect('/myConsole/')
+    else:
+        return redirect('/login/')
 
 
 @views.route('/register/', methods=['GET', 'POST'])
